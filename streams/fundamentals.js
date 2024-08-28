@@ -1,13 +1,20 @@
-// Netflix & Spotify
+import { Readable } from 'node:stream'
 
-// Importação de clientes via CSV (Excel)
-// 1gb - 1.000.000
-// POST /upload import.csv
+class OneToHundredStream extends Readable {
+    index = 1
+    _read() {
+        const i = this.index++
+        setTimeout(() => {
+            if (i > 100) {
+                this.push(null)
+            } else {
+                const buf = Buffer.from(String(i))
 
-// 10mb/s - 100s
+                this.push(buf)
+            }
+        }, 1000);
+    }
+}
 
-// 100s -> Inserção no banco de dados
-
-// 10mb/s -> 10.000
-
-// Readable Streams / Writable Streams
+new OneToHundredStream()
+.pipe(process.stdout)
